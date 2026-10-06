@@ -25,10 +25,3 @@ async def handles_get_user_id(user_id: int, db: Annotated[AsyncSession, Depends(
     user = get_user_by_id(user_id, db)
     return user
 
-@router.get(
-    "/{user_id}/logs",
-    response_model=logResponse,
-)
-async def handles_get_logs_by_user(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
-    logs = get_user_logs(user_id, db)
-    return logs

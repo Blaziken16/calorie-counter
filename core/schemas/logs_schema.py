@@ -6,15 +6,15 @@ class LogBase(BaseModel):
     calories: str = Field(min_length=2)
     
 
-class logCreate(LogBase):
-    user: str = Field(min_length=1)
+class LogCreate(LogBase):
+    user_id : int
     loggedAt: datetime
 
-class logUpdate(BaseModel):
+class LogUpdate(BaseModel):
     foodName: str | None = Field(min_length=3, max_length=50)
     calories: str | None = Field(min_length=2)
     
-class logResponse(LogBase):
+class LogResponse(LogBase):
     model_config = ConfigDict(from_attributes=True)
     id: int 
     user_id: int 
