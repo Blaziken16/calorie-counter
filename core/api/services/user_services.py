@@ -1,12 +1,10 @@
-from fastapi import Depends, HTTPException, status 
-from typing import Annotated
-from models.user_model import User
+from fastapi import HTTPException, status 
+from core.models.user_model import User
 from core.schemas.user_schema import UserCreate, UserUpdate
-from core.db.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-async def create_user(user: UserCreate,db: Annotated[AsyncSession, Depends(get_db)]):
+async def create_user(user: UserCreate,db: AsyncSession)-> User:
     result = await db.execute(
         select(User).where(User.name == user.name),
     )
@@ -16,7 +14,7 @@ async def create_user(user: UserCreate,db: Annotated[AsyncSession, Depends(get_d
             status_code=status.HTTP_400_BAD_REQUEST,
             detail= "user name already exists",
         )
-    new_user = user(
+    new_user = User(
         name = user.name,
         weight = user.weight,
         height = user.height,
@@ -26,16 +24,16 @@ async def create_user(user: UserCreate,db: Annotated[AsyncSession, Depends(get_d
     await db.refresh(new_user)
     return new_user
 
-async def get_user_by_id(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
+async def get_user_by_id(user_id: int, db: AsyncSession) -> User:
     result = await db.execute(
         select(User).where(User.id == user_id)
     )
     user = result.scalars().first()
-    if(user):
-        return user
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user not found.")
-
-async def update_user(user_update: UserUpdate, user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
+    if(not user):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user not found.")
+    return user
+    
+async def update_user(user_update: UserUpdate, user_id: int, db: AsyncSession):
     result = await db.execute(
         select(User).where(User.id == user_id)
     )

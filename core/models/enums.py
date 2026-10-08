@@ -2,5 +2,5 @@ from enum import Enum
 
 class Plan(str, Enum):
     CUT = "cut"
-    MAINTAIN = "maintian"
+    MAINTAIN = "maintain"
     BULK = "bulk"
