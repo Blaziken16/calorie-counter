@@ -33,7 +33,7 @@ async def get_user_by_id(user_id: int, db: AsyncSession) -> User:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user not found.")
     return user
     
-async def update_user(user_update: UserUpdate, user_id: int, db: AsyncSession):
+async def update_user(user_update: UserUpdate, user_id: int, db: AsyncSession)-> User:
     result = await db.execute(
         select(User).where(User.id == user_id)
     )
@@ -41,9 +41,9 @@ async def update_user(user_update: UserUpdate, user_id: int, db: AsyncSession):
     if(not user):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail= "user not found.")
 
-    if(user_update.name is not None and user_update.name != User.name):
+    if(user_update.name is not None and user_update.name != user.name):
         result = await db.execute(
-            select(User).where(user_update == User.name)
+            select(User).where(user_update.name == user.name)
         )
         existing_user = result.scalars().first()
         if(existing_user):
@@ -57,5 +57,7 @@ async def update_user(user_update: UserUpdate, user_id: int, db: AsyncSession):
     await db.refresh(user)
     return user
 
-
-    
+async def delete_user(user_id: int, db: AsyncSession):
+    user = await get_user_by_id(user_id, db)
+    await db.delete(user)
+    await db.commit()
