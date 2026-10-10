@@ -39,7 +39,7 @@ async def update_log_full_endpoint(log_id: int, log_update: LogCreate, db:Annota
     "/{log_id}",
     response_model=LogResponse
 )
-async def update_log_partialy_endpoint(log_id: int, log_update: LogUpdate, db:Annotated[AsyncSession, Depends(get_db)]):
+async def update_log_partially_endpoint(log_id: int, log_update: LogUpdate, db:Annotated[AsyncSession, Depends(get_db)]):
     updated_log = await update_log_partial(log_id, db, log_update)
     return updated_log
 
