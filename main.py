@@ -1,8 +1,8 @@
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from core.db.database import  engine, Base
 from core.api.routers import user_routes, log_routes
-from starlette.exceptions import HTTPException as StarletteHTTPException
+
 
 
 @asynccontextmanager
@@ -15,7 +15,7 @@ async def lifespan(_app:FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(user_routes.router, prefix="/api/user", tags=["users"])
-app.include_router(log_routes.router, prefix="/api/log", tags=["logs"])
+app.include_router(log_routes.Log_router, prefix="/api/log", tags=["logs"])
 
 
 
