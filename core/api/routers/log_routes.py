@@ -1,6 +1,6 @@
 from fastapi import APIRouter,status,Depends
 from core.schemas.logs_schema import LogCreate,LogResponse, LogUpdate
-from core.api.services.log_services import get_log_by_id, create_log, update_logs_full,update_log_partial
+from core.api.services.log_services import get_log_by_id, create_log, update_logs_full,update_log_partial, delete_log_by_id
 from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.db.database import get_db
@@ -43,3 +43,9 @@ async def update_log_partialy_endpoint(log_id: int, log_update: LogUpdate, db:An
     updated_log = await update_log_partial(log_id, db, log_update)
     return updated_log
 
+@Log_router.delete(
+    "/{log_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def delete_log_endpoint(log_id: int, db:Annotated[AsyncSession, Depends(get_db)]):
+    await delete_log_by_id(log_id, db)
