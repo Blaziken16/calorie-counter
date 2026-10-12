@@ -5,37 +5,37 @@ from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.db.database import get_db
 
-router = APIRouter()
+User_router = APIRouter()
 
-@router.post(
+@User_router.post(
     "",
     response_model= UserResponse,
     status_code = status.HTTP_201_CREATED,
 )
-async def handles_create_user(user:UserCreate, db:Annotated[AsyncSession, Depends(get_db)]):
+async def create_user_endpoint(user:UserCreate, db:Annotated[AsyncSession, Depends(get_db)]):
     new_user = await create_user(user = user, db = db)
     return new_user
 
-@router.get(
+@User_router.get(
     "/{user_id}",
     response_model= UserResponse,
 )
-async def handles_get_user_id(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
+async def get_user_by_id_endpoint(user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
     user = await get_user_by_id(user_id, db)
     return user
 
-@router.patch(
+@User_router.patch(
         "/{user_id}",
         response_model= UserResponse
 )
-async def handles_update_user( user_update: UserUpdate , user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
+async def update_user_endpoint( user_update: UserUpdate , user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
     user = await update_user(user_update, user_id, db)
     return user
 
 
-@router.delete(
+@User_router.delete(
     "/{user_id}",
     status_code= status.HTTP_204_NO_CONTENT,
 )
-async def handles_delete_user(user_id:int, db: Annotated[AsyncSession, Depends(get_db)]):
+async def delete_user_endpoint(user_id:int, db: Annotated[AsyncSession, Depends(get_db)]):
     await delete_user(user_id, db)
