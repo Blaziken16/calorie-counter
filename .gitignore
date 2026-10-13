@@ -11,3 +11,17 @@ wheels/
 
 # Environment Variables
 .env
+
+# Android / Gradle
+# -----------------------------
+android/.gradle/
+android/.idea/
+android/**/build/
+android/local.properties
+android/*.iml
+*.keystore
+*.jks
+
+# OS files
+.DS_Store
+Thumbs.db
